@@ -1,12 +1,28 @@
-<html lang="en">
+<html lang="hi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
-    <script type="module" crossorigin src="/assets/index-EwOxJ4I-.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-C8fCr5fu.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Baby Learning Game</title>
+    <meta name="description" content="Interactive bilingual baby learning app with games, quizzes, and activities" />
+    <meta name="theme-color" content="#FF6B6B" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="BabyLearn" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" type="image/png" href="/assets/generated/favicon.dim_64x64.png" />
+    <link rel="apple-touch-icon" href="/assets/generated/app-icon-192.dim_192x192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <script type="module" crossorigin src="/assets/index-B_DmI4YT.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Cg_A3pJQ.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+        });
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,27 @@
+{
+  "name": "Baby Learning Game",
+  "short_name": "BabyLearn",
+  "description": "Interactive bilingual baby learning app with games, quizzes, and activities in English and Hindi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF6B6B",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "hi",
+  "icons": [
+    {
+      "src": "/assets/generated/app-icon-192.dim_192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/generated/app-icon.dim_512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "kids"]
+}

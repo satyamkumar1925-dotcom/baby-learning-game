@@ -1,10 +1,18 @@
+import { Settings } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { GameScreen } from "../App";
-import { getStars } from "../utils/stars";
+import { useSettings } from "../context/SettingsContext";
+import {
+  getAvatar,
+  getStars,
+  getStreak,
+  updateStreak,
+} from "../utils/localProgress";
 
 interface HomeScreenProps {
   onNavigate: (screen: GameScreen) => void;
+  onDashboard: () => void;
 }
 
 const games = [
@@ -51,6 +59,17 @@ const games = [
     shadow: "shadow-[0_6px_0_0_oklch(48%_0.22_300)]",
     text: "text-[oklch(28%_0.22_300)]",
     ocid: "home.letters.button",
+  },
+  {
+    id: "abcwords" as GameScreen,
+    emoji: "📝",
+    title: "ABC Words",
+    subtitle: "Das Shabd / दस शब्द",
+    bg: "bg-[oklch(95%_0.12_145)]",
+    border: "border-[oklch(60%_0.22_145)]",
+    shadow: "shadow-[0_6px_0_0_oklch(50%_0.22_145)]",
+    text: "text-[oklch(30%_0.22_145)]",
+    ocid: "home.abcwords.button",
   },
   {
     id: "fruits" as GameScreen,
@@ -163,6 +182,17 @@ const games = [
     ocid: "home.bodyparts.button",
   },
   {
+    id: "family" as GameScreen,
+    emoji: "👨‍👩‍👧‍👦",
+    title: "Family",
+    subtitle: "Parivaar / परिवार",
+    bg: "bg-[oklch(95%_0.12_300)]",
+    border: "border-[oklch(60%_0.22_300)]",
+    shadow: "shadow-[0_6px_0_0_oklch(50%_0.22_300)]",
+    text: "text-[oklch(28%_0.22_300)]",
+    ocid: "home.family.button",
+  },
+  {
     id: "drawing" as GameScreen,
     emoji: "🖍️",
     title: "Drawing",
@@ -221,7 +251,7 @@ const games = [
     id: "counting" as GameScreen,
     emoji: "🔢",
     title: "Counting",
-    subtitle: "Gino / गिनो",
+    subtitle: "Gino 1-100 / गिनो",
     bg: "bg-[oklch(95%_0.12_300)]",
     border: "border-[oklch(60%_0.22_300)]",
     shadow: "shadow-[0_6px_0_0_oklch(50%_0.22_300)]",
@@ -263,7 +293,7 @@ const games = [
   },
   {
     id: "videos" as GameScreen,
-    emoji: "🎬",
+    emoji: "🎞️",
     title: "Videos",
     subtitle: "Video / वीडियो",
     bg: "bg-[oklch(95%_0.12_250)]",
@@ -294,10 +324,76 @@ const games = [
     text: "text-[oklch(30%_0.22_145)]",
     ocid: "home.colormix.button",
   },
+  {
+    id: "numbermatch" as GameScreen,
+    emoji: "🔢",
+    title: "Number Match",
+    subtitle: "Sankhya Milao / संख्या मिलाओ",
+    bg: "bg-[oklch(95%_0.12_145)]",
+    border: "border-[oklch(60%_0.22_145)]",
+    shadow: "shadow-[0_6px_0_0_oklch(50%_0.22_145)]",
+    text: "text-[oklch(30%_0.22_145)]",
+    ocid: "home.numbermatch.button",
+  },
+  {
+    id: "animalsound" as GameScreen,
+    emoji: "🔊",
+    title: "Animal Sound",
+    subtitle: "Aawaz / आवाज़",
+    bg: "bg-[oklch(95%_0.12_50)]",
+    border: "border-[oklch(68%_0.22_50)]",
+    shadow: "shadow-[0_6px_0_0_oklch(58%_0.22_50)]",
+    text: "text-[oklch(32%_0.22_50)]",
+    ocid: "home.animalsound.button",
+  },
+  {
+    id: "wordbuilder" as GameScreen,
+    emoji: "🔤",
+    title: "Word Builder",
+    subtitle: "Shabd Banao / शब्द बनाओ",
+    bg: "bg-[oklch(95%_0.12_300)]",
+    border: "border-[oklch(60%_0.22_300)]",
+    shadow: "shadow-[0_6px_0_0_oklch(50%_0.22_300)]",
+    text: "text-[oklch(28%_0.22_300)]",
+    ocid: "home.wordbuilder.button",
+  },
+  {
+    id: "memorycards" as GameScreen,
+    emoji: "🃏",
+    title: "Memory Cards",
+    subtitle: "Yaaddasht / याददाश्त",
+    bg: "bg-[oklch(95%_0.12_250)]",
+    border: "border-[oklch(60%_0.2_250)]",
+    shadow: "shadow-[0_6px_0_0_oklch(50%_0.2_250)]",
+    text: "text-[oklch(30%_0.2_250)]",
+    ocid: "home.memorycards.button",
+  },
+  {
+    id: "catchfruit" as GameScreen,
+    emoji: "🍎",
+    title: "Catch Fruit",
+    subtitle: "Phal Pakdo / फल पकड़ो",
+    bg: "bg-[oklch(96%_0.12_27)]",
+    border: "border-[oklch(65%_0.22_27)]",
+    shadow: "shadow-[0_6px_0_0_oklch(55%_0.22_27)]",
+    text: "text-[oklch(35%_0.22_27)]",
+    ocid: "home.catchfruit.button",
+  },
 ];
 
-export default function HomeScreen({ onNavigate }: HomeScreenProps) {
+export default function HomeScreen({
+  onNavigate,
+  onDashboard,
+}: HomeScreenProps) {
   const [stars, setStars] = useState(getStars);
+  const [streak, setStreak] = useState(() => getStreak().current);
+  const avatar = getAvatar();
+  const { openSettings } = useSettings();
+
+  useEffect(() => {
+    const newStreak = updateStreak();
+    setStreak(newStreak);
+  }, []);
 
   useEffect(() => {
     const update = () => setStars(getStars());
@@ -307,29 +403,53 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8">
-      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
         className="flex flex-col items-center mb-10 w-full max-w-3xl"
       >
-        <div className="flex items-center justify-between w-full mb-4">
-          <div className="w-24" />
-          <img
-            src="/assets/generated/baby-learning-logo-transparent.dim_200x200.png"
-            alt="Baby Learning Logo"
-            className="w-20 h-20"
-          />
-          <div
-            data-ocid="home.stars.panel"
-            className="flex items-center gap-1 bg-[oklch(96%_0.14_50)] border-4 border-[oklch(70%_0.22_50)] shadow-[0_4px_0_0_oklch(58%_0.22_50)] rounded-2xl px-4 py-2"
-          >
-            <span className="text-2xl">⭐</span>
-            <span className="font-display text-xl font-extrabold text-[oklch(32%_0.22_50)]">
-              {stars}
-            </span>
+        <div className="flex items-center justify-between w-full mb-2">
+          <div className="flex items-center gap-2">
+            <span className="text-3xl">{avatar}</span>
           </div>
+          <div className="flex items-center gap-2">
+            <div
+              data-ocid="home.stars.panel"
+              className="flex items-center gap-1 bg-[oklch(96%_0.14_50)] border-4 border-[oklch(70%_0.22_50)] shadow-[0_4px_0_0_oklch(58%_0.22_50)] rounded-2xl px-3 py-1"
+            >
+              <span className="text-xl">⭐</span>
+              <span className="font-display text-lg font-extrabold text-[oklch(32%_0.22_50)]">
+                {stars}
+              </span>
+            </div>
+            <motion.button
+              data-ocid="home.settings.button"
+              whileHover={{ scale: 1.08, rotate: 30 }}
+              whileTap={{ scale: 0.92 }}
+              onClick={openSettings}
+              className="w-10 h-10 flex items-center justify-center rounded-2xl border-2 border-border bg-card hover:bg-muted transition-colors"
+            >
+              <Settings className="w-5 h-5 text-muted-foreground" />
+            </motion.button>
+          </div>
+        </div>
+        {streak > 0 && (
+          <div className="flex items-center gap-1 text-sm font-bold text-[oklch(55%_0.22_27)] self-end mb-1">
+            <span>🔥</span>
+            <span className="font-display">{streak} day streak!</span>
+          </div>
+        )}
+        <div className="flex items-center gap-2 self-end mb-2">
+          <motion.button
+            data-ocid="home.dashboard.button"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.93 }}
+            onClick={onDashboard}
+            className="flex items-center gap-1.5 text-sm bg-[oklch(94%_0.1_300)] border-4 border-[oklch(72%_0.2_300)] shadow-[0_3px_0_0_oklch(60%_0.2_300)] rounded-xl px-3 py-1.5 font-display font-bold text-[oklch(38%_0.22_300)] active:shadow-none active:translate-y-0.5 transition-all"
+          >
+            📊 Dashboard
+          </motion.button>
         </div>
         <h1 className="font-display text-5xl sm:text-6xl font-extrabold text-center leading-tight">
           <span className="text-[oklch(60%_0.22_27)]">Baby </span>
@@ -340,7 +460,6 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
         </p>
       </motion.div>
 
-      {/* Game Cards Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 w-full max-w-3xl">
         {games.map((game, i) => (
           <motion.button
@@ -373,17 +492,11 @@ export default function HomeScreen({ onNavigate }: HomeScreenProps) {
         ))}
       </div>
 
-      {/* Footer */}
       <footer className="mt-auto pt-12 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()}. Built with ❤️ using{" "}
-        <a
-          href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-foreground transition-colors"
-        >
-          caffeine.ai
-        </a>
+        Created by{" "}
+        <span className="font-bold text-[oklch(45%_0.2_250)]">
+          Satyam Kumar
+        </span>
       </footer>
     </div>
   );

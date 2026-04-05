@@ -1,5 +1,6 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Settings } from "lucide-react";
 import { motion } from "motion/react";
+import { useSettings } from "../context/SettingsContext";
 
 interface GameLayoutProps {
   title: string;
@@ -16,6 +17,8 @@ export default function GameLayout({
   onBack,
   children,
 }: GameLayoutProps) {
+  const { openSettings } = useSettings();
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -40,8 +43,15 @@ export default function GameLayout({
               {title}
             </h2>
           </div>
-          <div className="w-20" />
-          {/* spacer */}
+          <motion.button
+            data-ocid="game.settings.button"
+            whileHover={{ scale: 1.08, rotate: 30 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={openSettings}
+            className="w-10 h-10 flex items-center justify-center rounded-2xl border-2 border-border bg-card hover:bg-muted transition-colors"
+          >
+            <Settings className="w-5 h-5 text-muted-foreground" />
+          </motion.button>
         </div>
       </div>
 
